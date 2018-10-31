@@ -75,7 +75,7 @@ def get_stopwords():
     return words
 
 
-def remove_stopwords(dictionary):
+def remove_stopwords(dictionary) -> object:
     """
     :param dictionary: gensim.corpa Dictionary
     :return: NULL
@@ -84,7 +84,7 @@ def remove_stopwords(dictionary):
     stop_words = get_stopwords()
 
     # Filter out stopwords that are not in the dictionary's keys
-    stop_words = list(filter(lambda w: w not in dictionary.token2id.keys(), stop_words))
+    stop_words = list(filter(lambda w: w in dictionary.token2id.keys(), stop_words))
 
     # Map the remaining stopwords to the ID's
     stop_ids = list(map(lambda w: dictionary.token2id[w], stop_words))
@@ -121,6 +121,13 @@ def main():
     # Dictionary building
     dictionary = gensim.corpora.Dictionary(stemmed)
     remove_stopwords(dictionary)
+
+    # Retrieval models
+
+
+
+    # Querying
+
 
 
 if __name__ == '__main__':
