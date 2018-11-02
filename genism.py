@@ -1,5 +1,5 @@
 import random
-#random.seed(123)
+# random.seed(123)
 import codecs
 import string
 import re
@@ -56,7 +56,7 @@ def tokenize(paragraphs):
 def stem(tokens):
     """
     :param paragraphs: list[String], list containing paragraphs
-    :return: a list of word where each paragraph is a list of processed lower-case words
+    :return: List[List[String]]
     """
     stemmer = PorterStemmer()
     stemmedTokens = []
@@ -70,7 +70,8 @@ def stem(tokens):
 
 def get_stopwords():
     """
-    :return: stopwords
+    Gives you the stopwords in a list, ["a", "able"..."your"]
+    :return: List[String]
     """
     f = open("stopwords.txt", "r")
     words = f.read().split(",")
@@ -110,7 +111,7 @@ def preprocessing(query, dictionary):
     query[0] = query[0].lower()
     tokenized = tokenize(query)
     stemmed = stem(tokenized)
-    #print("\nS T E M M E D:\n",stemmed,"\n")
+    # print("\nS T E M M E D:\n",stemmed,"\n")
     bags_of_words = map_paragraph_to_bow(stemmed, dictionary)
     return bags_of_words
 
@@ -128,14 +129,12 @@ def main():
     tokenized = tokenize(filtered)
     stemmed = stem(tokenized)
 
-
     """
     Dictionary building
     """
     dictionary = gensim.corpora.Dictionary(stemmed)
     remove_stopwords(dictionary)
     bags_of_words = map_paragraph_to_bow(stemmed, dictionary)
-
 
     """
     Retrieval models
@@ -160,7 +159,7 @@ def main():
     Querying
     """
     # Prep query - T F I D F
-    #query = ["What is the function of money?"]
+    # query = ["What is the function of money?"]
     query = ["How taxes influences Economics?"]
     bow_query = preprocessing(query, dictionary)
 
@@ -174,7 +173,7 @@ def main():
     for rel in rel_tfidf:
         i, score = rel
         paragraph = filtered[i]
-        print("[paragraph {}]".format(i+1))
+        print("[paragraph {}]".format(i + 1))
         print("\n", paragraph.split("\n")[:6], "\n")
 
     # Prep query - L S I
@@ -187,8 +186,7 @@ def main():
     print("\n----------- Top 3 topics, with most significant weights-----------")
     for id in topic_ids:
         print("[Topic {}]".format(id))
-        print(lsi_model.print_topic(id),"\n")
-
+        print(lsi_model.print_topic(id), "\n")
 
     # Report the top 3 (most relevant paragraphs according to LSI model)
     doc2similarity = enumerate(lsi_index[lsi_query])
@@ -197,11 +195,9 @@ def main():
     print("\n----------- Top 3 most relevant paragraphs LSI-----------")
     for rel in rel_lsi:
         i, score = rel
-        paragraph = filtered[i+1]
-        print("[paragraph {}]".format(i+1))
-        print("\n",paragraph.split("\n")[:6],"\n") #can use split("\n")[:6] on paragraph to only show first 5 lines.
-
-
+        paragraph = filtered[i + 1]
+        print("[paragraph {}]".format(i + 1))
+        print("\n", paragraph.split("\n")[:6], "\n")  # can use split("\n")[:6] on paragraph to only show first 5 lines.
 
 
 if __name__ == '__main__':
