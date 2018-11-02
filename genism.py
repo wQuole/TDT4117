@@ -169,7 +169,7 @@ def main():
     # Report top 3 most relevant paragraphs for query
     doc2similarity = enumerate(tfidf_index[tfidf_query])
     rel_tfidf = sorted(doc2similarity, key=lambda kv: -kv[1])[:3]
-    print("\n----------- Top 3 most relevant paragraphs TFIDF-----------")
+    print("\n----------- Top 3 most relevant paragraphs TFIDF-----------\n")
     for rel in rel_tfidf:
         i, score = rel
         paragraph = filtered[i]
@@ -183,7 +183,7 @@ def main():
 
     # Report the top 3 (most significant weight)
     topic_ids = list(map(lambda p: p[0], sorted_lsi_query))
-    print("\n----------- Top 3 topics, with most significant weights-----------")
+    print("\n----------- Top 3 topics, with most significant weights-----------\n")
     for id in topic_ids:
         print("[Topic {}]".format(id))
         print(lsi_model.print_topic(id), "\n")
@@ -192,7 +192,7 @@ def main():
     doc2similarity = enumerate(lsi_index[lsi_query])
     rel_lsi = sorted(doc2similarity, key=lambda kv: -kv[1])[:3]
     # Print
-    print("\n----------- Top 3 most relevant paragraphs LSI-----------")
+    print("\n----------- Top 3 most relevant paragraphs LSI-----------\n")
     for rel in rel_lsi:
         i, score = rel
         paragraph = filtered[i + 1]
