@@ -86,7 +86,7 @@ def remove_stopwords(dictionary) -> object:
     # Fetch stopwords from file
     stop_words = get_stopwords()
 
-    # Filter out stopwords that are not in the dictionary's keys
+    # Filter out stopwords that are in the dictionary's keys
     stop_words = list(filter(lambda w: w in dictionary.token2id.keys(), stop_words))
 
     # Map the remaining stopwords to the ID's
@@ -153,7 +153,8 @@ def main():
     lsi_corpus = lsi_model[tfidf_corpus]
     lsi_index = gensim.similarities.MatrixSimilarity(lsi_corpus, num_features=len(dictionary))
 
-    lsi_model.show_topics(3)
+    # Print to interpret first 3 LSI topics
+    # print(lsi_model.show_topics(3))
 
     """
     Querying
@@ -169,10 +170,11 @@ def main():
     # Report top 3 most relevant paragraphs for query
     doc2similarity = enumerate(tfidf_index[tfidf_query])
     rel_tfidf = sorted(doc2similarity, key=lambda kv: -kv[1])[:3]
+    print("\n----------- Top 3 most relevant paragraphs TFIDF-----------")
     for rel in rel_tfidf:
         i, score = rel
-        paragraph = original_paragraphs[i]
-        print("[paragraph {}]".format(i))
+        paragraph = filtered[i]
+        print("[paragraph {}]".format(i+1))
         print("\n", paragraph.split("\n")[:6], "\n")
 
     # Prep query - L S I
@@ -182,6 +184,7 @@ def main():
 
     # Report the top 3 (most significant weight)
     topic_ids = list(map(lambda p: p[0], sorted_lsi_query))
+    print("\n----------- Top 3 topics, with most significant weights-----------")
     for id in topic_ids:
         print("[Topic {}]".format(id))
         print(lsi_model.print_topic(id),"\n")
@@ -191,10 +194,11 @@ def main():
     doc2similarity = enumerate(lsi_index[lsi_query])
     rel_lsi = sorted(doc2similarity, key=lambda kv: -kv[1])[:3]
     # Print
+    print("\n----------- Top 3 most relevant paragraphs LSI-----------")
     for rel in rel_lsi:
         i, score = rel
-        paragraph = original_paragraphs[i]
-        print("[paragraph {}]".format(i))
+        paragraph = filtered[i+1]
+        print("[paragraph {}]".format(i+1))
         print("\n",paragraph.split("\n")[:6],"\n") #can use split("\n")[:6] on paragraph to only show first 5 lines.
 
 
